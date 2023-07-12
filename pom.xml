@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.code-intelligence</groupId>
             <artifactId>jazzer-junit</artifactId>
-            <version>0.16.0</version>
+            <version>0.19.0</version>
         </dependency>
 
         <dependency>
@@ -64,6 +64,14 @@
             <artifactId>junit-platform-launcher</artifactId>
             <version>1.9.2</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.mikesamuel/json-sanitizer -->
+        <dependency>
+            <groupId>com.mikesamuel</groupId>
+            <artifactId>json-sanitizer</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>

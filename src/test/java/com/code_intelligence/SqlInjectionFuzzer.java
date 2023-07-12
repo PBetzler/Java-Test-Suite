@@ -1,4 +1,4 @@
-package code_intelligence;
+package com.code_intelligence;
 
 import com.code_intelligence.SqlInjection;
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;

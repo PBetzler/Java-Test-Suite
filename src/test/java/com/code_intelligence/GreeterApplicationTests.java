@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package code_intelligence;
+package com.code_intelligence;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
@@ -24,8 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest()
 public class GreeterApplicationTests {
