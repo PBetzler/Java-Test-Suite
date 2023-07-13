@@ -88,7 +88,7 @@ class GreeterApplication {
   }
 
   @GetMapping("/bye")
-  public String instableBye(@RequestParam(required = false, defaultValue = "World") String name) {
+  public String unstableBye(@RequestParam(required = false, defaultValue = "World") String name) {
     // We trigger an exception in the special case where the name is "attacker". This shows
     // how CI Fuzz can find this out and generates a test case triggering the exception
     // guarded by this check.

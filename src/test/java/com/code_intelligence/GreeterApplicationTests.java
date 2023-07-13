@@ -54,29 +54,47 @@ public class GreeterApplicationTests {
     mockMvc.perform(get("/hello").param("name", "Contributor"));
   }
 
+  @Test
+  public void unitTestBye() throws Exception {
+    mockMvc.perform(get("/bye").param("name", "something"));
+  }
+
+
+  @Test
+  public void unitTestFirstAndSecond() throws Exception {
+    mockMvc.perform(get("/first").param("param", "SomeThingRandom"));
+    mockMvc.perform(get("/second").param("param", "SomeThingElseRandom"));
+    mockMvc.perform(get("/first").param("param", "SomeThingRandom"));
+  }
+
   @FuzzTest
-  public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
+  public void fuzzTestFirstAndSecond(FuzzedDataProvider data) throws Exception {
     for (int i = 0; i < data.consumeInt(); i++) {
 
-      switch (data.consumeInt(0,3)) {
+      switch (data.consumeInt(0,1)) {
         case 0:
-          mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
+          mockMvc.perform(get("/first").param("param", data.consumeRemainingAsString()));
           break;
         case 1:
-          mockMvc.perform(get("/first").param("name", data.consumeRemainingAsString()));
-          break;
-        case 2:
-          mockMvc.perform(get("/second").param("name", data.consumeRemainingAsString()));
-          break;
-        case 4:
-          try {
-            mockMvc.perform(get("/bye").param("name", data.consumeRemainingAsString()));
-          } catch (Exception ignored) {
-            throw new FuzzerSecurityIssueMedium("Endpoint /bye crashed");
-          }
+          mockMvc.perform(get("/second").param("param", data.consumeRemainingAsString()));
           break;
       }
     }
 
+  }
+
+  @FuzzTest
+  public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
+
+          mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
+  }
+
+  @FuzzTest
+  public void fuzzTestBye(FuzzedDataProvider data) throws Exception {
+        try {
+        mockMvc.perform(get("/bye").param("name", data.consumeRemainingAsString()));
+        } catch (Exception ignored) {
+          throw new FuzzerSecurityIssueMedium("Endpoint /bye crashed");
+        }
   }
 }
