@@ -68,6 +68,11 @@ public class GreeterApplicationTests {
   }
 
   @FuzzTest
+  public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
+    mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
+  }
+
+  @FuzzTest
   public void fuzzTestFirstAndSecond(FuzzedDataProvider data) throws Exception {
     for (int i = 0; i < data.consumeInt(); i++) {
 
@@ -81,12 +86,6 @@ public class GreeterApplicationTests {
       }
     }
 
-  }
-
-  @FuzzTest
-  public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
-
-          mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
   }
 
   @FuzzTest

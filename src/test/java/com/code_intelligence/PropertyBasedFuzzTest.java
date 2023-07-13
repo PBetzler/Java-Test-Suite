@@ -9,6 +9,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class PropertyBasedFuzzTest {
 
+    /**
+     * Real test that found the XSS vulnerability in json-sanitizer version 1.2.1
+     * @param data
+     * @throws Exception
+     */
     @FuzzTest
     public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
         String input = data.consumeRemainingAsString();
@@ -20,6 +25,7 @@ public class PropertyBasedFuzzTest {
             return;
         }
 
+        // Property based evaluation as sort of custom bug detector.
         assert !safeJSON.contains("</script")
                 : new FuzzerSecurityIssueHigh("XSS Vulnerability in JsonSanitizer");
     }

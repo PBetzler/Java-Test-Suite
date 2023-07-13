@@ -36,3 +36,5 @@ build/
 
 /.cifuzz-*
 crash-*
+Crash*
+**/src/test/resources/**/*Inputs*/**
