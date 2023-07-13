@@ -19,6 +19,7 @@ package com.code_intelligence;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
+import com.code_intelligence.jazzer.api.FuzzerSecurityIssueMedium;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +56,27 @@ public class GreeterApplicationTests {
 
   @FuzzTest
   public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
-    String name = data.consumeRemainingAsString();
-    mockMvc.perform(get("/hello").param("name", name));
+    for (int i = 0; i < data.consumeInt(); i++) {
+
+      switch (data.consumeInt(0,3)) {
+        case 0:
+          mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
+          break;
+        case 1:
+          mockMvc.perform(get("/first").param("name", data.consumeRemainingAsString()));
+          break;
+        case 2:
+          mockMvc.perform(get("/second").param("name", data.consumeRemainingAsString()));
+          break;
+        case 4:
+          try {
+            mockMvc.perform(get("/bye").param("name", data.consumeRemainingAsString()));
+          } catch (Exception ignored) {
+            throw new FuzzerSecurityIssueMedium("Endpoint /bye crashed");
+          }
+          break;
+      }
+    }
+
   }
 }

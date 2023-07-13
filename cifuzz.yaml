@@ -26,7 +26,7 @@
 # - -rss_limit_mb=4096
 
 ## Maximum time to run fuzz tests. The default is to run indefinitely.
-#timeout: 30m
+timeout: 5m
 
 ## By default, fuzz tests are executed in a sandbox to prevent accidental
 ## damage to the system. Set to false to run fuzz tests unsandboxed.
@@ -43,4 +43,4 @@
 #server: https://app.code-intelligence.com
 
 ## Set the project name on the CI App
-#project: my-project-1a2b3c4d
+project: Java%20Test%20Suite-27856477
