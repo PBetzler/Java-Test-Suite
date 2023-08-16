@@ -8,4 +8,4 @@ Let the fuzzer not only control the inputs, but also the control flow to achieve
 Robustness/business-logic issues are best detected by testcases written the way of property based tests.
 
 To execute the tests you can either use [cifuzz](https://github.com/CodeIntelligenceTesting/cifuzz) (recommended)  and/or [CISense](https://app.code-intelligence.com/dashboard/start) (recommended) 
-or set the env variable JAZZER=FUZZ=1 and execute via mvn (not recommended).
+or set the env variable JAZZER_FUZZ=1 and execute via mvn (not recommended).
