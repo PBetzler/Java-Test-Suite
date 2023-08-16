@@ -43,4 +43,4 @@ timeout: 5m
 #server: https://app.code-intelligence.com
 
 ## Set the project name on the CI App
-project: Java%20Test%20Suite-27856477
+project: Java%20Test%20Suite-170c6b7d

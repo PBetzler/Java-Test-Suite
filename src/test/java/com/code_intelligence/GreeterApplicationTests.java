@@ -59,6 +59,10 @@ public class GreeterApplicationTests {
     mockMvc.perform(get("/bye").param("name", "something"));
   }
 
+  @FuzzTest
+  public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
+    mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
+  }
 
   @Test
   public void unitTestFirstAndSecond() throws Exception {
@@ -68,13 +72,8 @@ public class GreeterApplicationTests {
   }
 
   @FuzzTest
-  public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
-    mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
-  }
-
-  @FuzzTest
   public void fuzzTestFirstAndSecond(FuzzedDataProvider data) throws Exception {
-    for (int i = 0; i < data.consumeInt(); i++) {
+    for (int i = 0; i < data.consumeInt(1,100); i++) {
 
       switch (data.consumeInt(0,1)) {
         case 0:
