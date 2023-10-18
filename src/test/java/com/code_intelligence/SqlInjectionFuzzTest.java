@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-public class SqlInjectionFuzzer {
+public class SqlInjectionFuzzTest {
 
     private static SqlInjection project;
 
@@ -26,7 +26,7 @@ public class SqlInjectionFuzzer {
     }
 
     @FuzzTest
-    public static void fuzzerTestOneInput(FuzzedDataProvider data) throws SQLException {
+    public static void myFuzzTest(FuzzedDataProvider data) throws SQLException {
         project.getUserByUsername(data.consumeString(100));
     }
 }

@@ -4,12 +4,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.BeforeAll;
 
 public class SqlInjection {
     private Connection conn;
 
-    @BeforeAll
+    //@BeforeAll
     public void connect() throws SQLException {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:database.db");

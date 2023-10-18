@@ -22,7 +22,8 @@
 
 ## Command-line arguments to pass to libFuzzer.
 ## See https://llvm.org/docs/LibFuzzer.html#options
-#engine-args:
+engine-args:
+  --instrumentation_includes=com.code_intelligence.*
 # - -rss_limit_mb=4096
 
 ## Maximum time to run fuzz tests. The default is to run indefinitely.
@@ -43,4 +44,4 @@ timeout: 5m
 #server: https://app.code-intelligence.com
 
 ## Set the project name on the CI App
-project: Java%20Test%20Suite-170c6b7d
+project: Java-Test-Suite-170c6b7d

@@ -84,13 +84,12 @@ public class GreeterApplicationTests {
           break;
       }
     }
-
   }
 
   @FuzzTest
   public void fuzzTestBye(FuzzedDataProvider data) throws Exception {
         try {
-        mockMvc.perform(get("/bye").param("name", data.consumeRemainingAsString()));
+          mockMvc.perform(get("/bye").param("name", data.consumeRemainingAsString()));
         } catch (Exception ignored) {
           throw new FuzzerSecurityIssueMedium("Endpoint /bye crashed");
         }
