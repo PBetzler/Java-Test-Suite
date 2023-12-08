@@ -54,10 +54,6 @@ class GreeterApplication {
 
   @GetMapping("/first")
   public String first(@RequestParam(required = false, defaultValue = "World") String param) {
-    // We trigger an exception in the special case where the name is "attacker". This shows
-    // how CI Fuzz can find this out and generates a test case triggering the exception
-    // guarded by this check.
-    // Black-box approaches lack insights into the code and thus cannot handle these cases.
     if (param.equalsIgnoreCase("SomeThingRandom")) {
       if (firstAtomicInteger.get() == 0) {
         if (!atomicBool.get()) {
@@ -75,10 +71,6 @@ class GreeterApplication {
 
     @GetMapping("/second")
   public String second(@RequestParam(required = false, defaultValue = "World") String param) {
-    // We trigger an exception in the special case where the name is "attacker". This shows
-    // how CI Fuzz can find this out and generates a test case triggering the exception
-    // guarded by this check.
-    // Black-box approaches lack insights into the code and thus cannot handle these cases.
     if (param.equalsIgnoreCase("SomeThingElseRandom")) {
       if (firstAtomicInteger.get() == 1) {
         firstAtomicInteger.set(0);
