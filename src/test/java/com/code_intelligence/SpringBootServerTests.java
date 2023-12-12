@@ -21,28 +21,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.api.FuzzerSecurityIssueMedium;
 import com.code_intelligence.jazzer.junit.FuzzTest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest()
-public class GreeterApplicationTests {
+public class SpringBootServerTests {
   @Autowired private MockMvc mockMvc;
-
-  private boolean beforeCalled = false;
-
-  @BeforeEach
-  public void beforeEach() {
-    beforeCalled = true;
-  }
-
-  @AfterEach
-  public void afterEach() {
-    beforeCalled = false;
-  }
 
   @Test
   public void unitTestHelloDeveloper() throws Exception {
@@ -54,11 +40,6 @@ public class GreeterApplicationTests {
     mockMvc.perform(get("/hello").param("name", "Contributor"));
   }
 
-  @Test
-  public void unitTestBye() throws Exception {
-    mockMvc.perform(get("/bye").param("name", "something"));
-  }
-
   @FuzzTest
   public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
     mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
@@ -66,9 +47,9 @@ public class GreeterApplicationTests {
 
   @Test
   public void unitTestFirstAndSecond() throws Exception {
-    mockMvc.perform(get("/first").param("param", "SomeThingRandom"));
-    mockMvc.perform(get("/second").param("param", "SomeThingElseRandom"));
-    mockMvc.perform(get("/first").param("param", "SomeThingRandom"));
+    mockMvc.perform(get("/first").param("param", "Never gonna give you up"));
+    mockMvc.perform(get("/second").param("param", "Never gonna let you down"));
+    mockMvc.perform(get("/first").param("param", "Never gonna run around and desert you"));
   }
 
   @FuzzTest
@@ -86,12 +67,17 @@ public class GreeterApplicationTests {
     }
   }
 
+  @Test
+  public void unitTestGetUser() throws Exception {
+    mockMvc.perform(get("/user").param("id", "something"));
+  }
+
   @FuzzTest
-  public void fuzzTestBye(FuzzedDataProvider data) throws Exception {
+  public void fuzzTestGetUser(FuzzedDataProvider data) throws Exception {
         try {
-          mockMvc.perform(get("/bye").param("name", data.consumeRemainingAsString()));
+          mockMvc.perform(get("/user").param("id", data.consumeRemainingAsString()));
         } catch (Exception ignored) {
-          throw new FuzzerSecurityIssueMedium("Endpoint /bye crashed");
+          throw new FuzzerSecurityIssueMedium("Endpoint /user crashed");
         }
   }
 }

@@ -1,6 +1,5 @@
 package com.code_intelligence;
 
-import com.code_intelligence.SqlInjection;
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-public class SqlInjectionFuzzTest {
+public class SqlInjectionTest {
 
     private static SqlInjection project;
 

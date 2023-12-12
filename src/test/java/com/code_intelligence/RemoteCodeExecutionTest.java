@@ -1,6 +1,5 @@
 package com.code_intelligence;
 
-import com.code_intelligence.RemoteCodeExecution;
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 
-public class RemoteCodeExecutionFuzzTest {
+public class RemoteCodeExecutionTest {
 
 
     @Test

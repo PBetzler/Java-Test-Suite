@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Base64;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,11 +31,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @SpringBootApplication
 @RestController
-class GreeterApplication {
+class SpringBootServer {
 
   private static AtomicInteger firstAtomicInteger = new AtomicInteger(0);
   private static AtomicBoolean atomicBool = new AtomicBoolean(false);
-
   private static ReadWriteLock lock = new ReentrantReadWriteLock();
 
 
@@ -79,22 +79,23 @@ class GreeterApplication {
     return "Second endpoint";
   }
 
-  @GetMapping("/bye")
-  public String unstableBye(@RequestParam(required = false, defaultValue = "World") String name) {
+  @GetMapping("/user")
+  public String getUser(@RequestParam String id) {
+    Base64.Encoder base64 = Base64.getEncoder();
     // We trigger an exception in the special case where the name is "attacker". This shows
     // how CI Fuzz can find this out and generates a test case triggering the exception
     // guarded by this check.
     // Black-box approaches lack insights into the code and thus cannot handle these cases.
-    if (name.equalsIgnoreCase("something")) {
+    if (base64.encodeToString(id.getBytes()).startsWith("YWRtaW46")) {
       // We throw an exception here to mimic the situation that something unexpected
       // occurred while handling the request.
       throw new RuntimeException("RuntimeException");
     }
-    return "Bye " + name + "!";
+    return "Hello user " + id + "!";
   }
 
 
   public static void main(String[] args) {
-    SpringApplication.run(GreeterApplication.class, args);
+    SpringApplication.run(SpringBootServer.class, args);
   }
 }
