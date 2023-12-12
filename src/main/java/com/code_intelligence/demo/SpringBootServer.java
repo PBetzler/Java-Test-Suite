@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.code_intelligence;
+package com.code_intelligence.demo;
 
-import com.code_intelligence.jazzer.api.FuzzerSecurityIssueMedium;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +51,7 @@ class SpringBootServer {
     if (name.equalsIgnoreCase("attacker")) {
       // We throw an exception here to mimic the situation that something unexpected
       // occurred while handling the request.
-      throw new FuzzerSecurityIssueMedium("We panic when trying to greet an attacker!");
+      throw new SecurityException("We panic when trying to greet an attacker!");
     }
     return "Hello " + name + "!";
   }
@@ -78,7 +77,7 @@ class SpringBootServer {
           lock.writeLock().unlock();
         } else {
           lock.writeLock().unlock();
-          throw new FuzzerSecurityIssueMedium("Access should not have been permitted!");
+          throw new SecurityException("Access should not have been permitted!");
         }
       }
     }
@@ -115,7 +114,7 @@ class SpringBootServer {
     if (base64.encodeToString(id.getBytes()).startsWith("YWRtaW46")) {
       // We throw an exception here to mimic the situation that something unexpected
       // occurred while handling the request.
-      throw new RuntimeException("RuntimeException");
+      throw new SecurityException("SecurityException");
     }
     return "Hello user " + id + "!";
   }

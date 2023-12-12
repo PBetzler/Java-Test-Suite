@@ -47,12 +47,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.code-intelligence</groupId>
-            <artifactId>jazzer-junit</artifactId>
-            <version>0.19.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.9.0</version>
@@ -71,51 +65,37 @@
             <artifactId>json-sanitizer</artifactId>
             <version>1.2.1</version>
         </dependency>
-
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>cifuzz</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.8</version>
-                        <configuration>
-                            <formats>${cifuzz.report.format}</formats>
-                            <outputDirectory>${cifuzz.report.output}</outputDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 
     <build>
-        <plugins>
+        <extensions>
+        <extension>
+            <groupId>com.code-intelligence</groupId>
+            <artifactId>cifuzz-maven-extension</artifactId>
+            <version>1.1.0</version>
+        </extension>
+    </extensions>
 
+        <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>code-intelligence</id>
+            <url>https://gitlab.code-intelligence.com/api/v4/projects/89/packages/maven</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>code-intelligence</id>
+            <url>https://gitlab.code-intelligence.com/api/v4/projects/89/packages/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

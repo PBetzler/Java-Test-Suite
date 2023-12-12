@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.code_intelligence;
+package com.code_intelligence.demo;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
-import com.code_intelligence.jazzer.api.FuzzerSecurityIssueMedium;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +76,7 @@ public class SpringBootServerTests {
         try {
           mockMvc.perform(get("/user").param("id", data.consumeRemainingAsString()));
         } catch (Exception ignored) {
-          throw new FuzzerSecurityIssueMedium("Endpoint /user crashed");
+          throw new SecurityException("Endpoint /user crashed");
         }
   }
 }

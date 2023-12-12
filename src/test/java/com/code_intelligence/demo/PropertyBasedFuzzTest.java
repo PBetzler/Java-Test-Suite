@@ -1,7 +1,6 @@
-package com.code_intelligence;
+package com.code_intelligence.demo;
 
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
-import com.code_intelligence.jazzer.api.FuzzerSecurityIssueHigh;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 import com.google.json.JsonSanitizer;
 
@@ -27,6 +26,6 @@ public class PropertyBasedFuzzTest {
 
         // Property based evaluation as sort of custom bug detector.
         assert !safeJSON.contains("</script")
-                : new FuzzerSecurityIssueHigh("XSS Vulnerability in JsonSanitizer");
+                : new SecurityException("XSS Vulnerability in JsonSanitizer");
     }
 }

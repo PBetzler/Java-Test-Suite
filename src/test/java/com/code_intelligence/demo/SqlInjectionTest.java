@@ -1,5 +1,6 @@
-package com.code_intelligence;
+package com.code_intelligence.demo;
 
+import com.code_intelligence.demo.SqlInjection;
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
 import org.junit.jupiter.api.BeforeAll;
