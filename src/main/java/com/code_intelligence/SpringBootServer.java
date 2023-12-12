@@ -33,11 +33,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @RestController
 class SpringBootServer {
 
-  private static AtomicInteger firstAtomicInteger = new AtomicInteger(0);
+  private static AtomicInteger atomicInteger = new AtomicInteger(0);
   private static AtomicBoolean atomicBool = new AtomicBoolean(false);
   private static ReadWriteLock lock = new ReentrantReadWriteLock();
 
 
+  /**
+   * Insecure /hello endpoint function that crashes when param name equals attacker
+   * @param name
+   * @return
+   */
   @GetMapping("/hello")
   public String insecureHello(@RequestParam(required = false, defaultValue = "World") String name) {
     // We trigger an exception in the special case where the name is "attacker". This shows
@@ -52,16 +57,27 @@ class SpringBootServer {
     return "Hello " + name + "!";
   }
 
+  /**
+   * Endpoint that creates side effects if param equals "SomeThingRandom" and crashes
+   * when side effects not in correct state
+   * @param param
+   * @return
+   */
   @GetMapping("/first")
   public String first(@RequestParam(required = false, defaultValue = "World") String param) {
     if (param.equalsIgnoreCase("SomeThingRandom")) {
-      if (firstAtomicInteger.get() == 0) {
+      lock.writeLock().lock();
+
+      // Check if atomicInteger is 0 and if atomicBool is false
+      // if both are 0 and false, set both to 1 and true
+      // else if only atomicInteger is 0 throw an exception that's caught by the fuzzer
+      if (atomicInteger.get() == 0 ) {
         if (!atomicBool.get()) {
-          lock.writeLock().lock();
           atomicBool.set(true);
-          firstAtomicInteger.set(1);
+          atomicInteger.set(1);
           lock.writeLock().unlock();
         } else {
+          lock.writeLock().unlock();
           throw new FuzzerSecurityIssueMedium("Access should not have been permitted!");
         }
       }
@@ -69,21 +85,31 @@ class SpringBootServer {
     return "First endpoint";
   }
 
+  /**
+   * Endpoint that incorrectly resets side effect state of /first endpoint if param equals "SomeThingElseRandom"
+   * @param param
+   * @return
+   */
     @GetMapping("/second")
   public String second(@RequestParam(required = false, defaultValue = "World") String param) {
     if (param.equalsIgnoreCase("SomeThingElseRandom")) {
-      if (firstAtomicInteger.get() == 1) {
-        firstAtomicInteger.set(0);
-      }
+      // Set atomicInteger to 0 but do not change atomicBool to trigger the exception
+      // in endpoint /first
+      atomicInteger.set(0);
     }
     return "Second endpoint";
   }
 
+  /**
+   * Endpoint crashes if base64 encoded id of user starts with "YWRtaW46"
+   * @param id
+   * @return
+   */
   @GetMapping("/user")
   public String getUser(@RequestParam String id) {
     Base64.Encoder base64 = Base64.getEncoder();
-    // We trigger an exception in the special case where the name is "attacker". This shows
-    // how CI Fuzz can find this out and generates a test case triggering the exception
+    // We trigger an exception in the special case where the base64 encoded id starts with "YWRtaW46".
+    // This shows how CI Fuzz can find this out and generates a test case triggering the exception
     // guarded by this check.
     // Black-box approaches lack insights into the code and thus cannot handle these cases.
     if (base64.encodeToString(id.getBytes()).startsWith("YWRtaW46")) {

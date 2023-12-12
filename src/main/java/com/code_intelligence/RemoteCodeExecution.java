@@ -3,6 +3,10 @@ package com.code_intelligence;
 import java.io.*;
 
 public class RemoteCodeExecution {
+
+    /**
+     * Inner class book contains a title and an author field and implements the necessary serializable functions.
+     */
     public static class Book implements Serializable {
         private static final long serialVersionUID = 123456789L;
         public String title;
@@ -24,6 +28,12 @@ public class RemoteCodeExecution {
         }
     }
 
+    /**
+     * Faulty deserialize function that checks type of deserialized object to late and allows for gadget chain attacks
+     * @param stream
+     * @return
+     * @throws IOException
+     */
     public static Book deserialize(ByteArrayInputStream stream) throws IOException {
         ObjectInputStream ois = new ObjectInputStream(stream);
         try {
@@ -37,10 +47,14 @@ public class RemoteCodeExecution {
         }
     }
 
+    /**
+     * Working serialize function that writes the serialized book object to the given ByteArrayOutputStream
+     * @param book
+     * @return
+     * @throws IOException
+     */
     public static ByteArrayOutputStream serialize(Book book) throws IOException {
         try {
-            // Casting the result of readObject() occurs after the deserialization process ends
-            // which make it possible to read any object and can lead to gadget chain attacks
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             book.writeObject(stream);
 
