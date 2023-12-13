@@ -17,12 +17,15 @@
 package com.code_intelligence.demo;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest()
@@ -36,12 +39,28 @@ public class SpringBootServerTests {
 
   @Test
   public void unitTestHelloHacker() throws Exception {
-    mockMvc.perform(get("/hello").param("name", "Contributor"));
+    mockMvc.perform(get("/hello").param("name", "Hacker"));
   }
 
   @FuzzTest
   public void fuzzTestHello(FuzzedDataProvider data) throws Exception {
     mockMvc.perform(get("/hello").param("name", data.consumeRemainingAsString()));
+  }
+
+
+  @Test
+  public void unitTestJsonHacker() throws Exception {
+    ObjectMapper om = new ObjectMapper();
+    SpringBootServer.User user = new SpringBootServer.User();
+    user.name = "Hacker";
+    mockMvc.perform(post("/json").content(om.writeValueAsString(user)).contentType(MediaType.APPLICATION_JSON));
+  }
+  @FuzzTest
+  public void fuzzTestJson(FuzzedDataProvider data) throws Exception {
+    ObjectMapper om = new ObjectMapper();
+    SpringBootServer.User user = new SpringBootServer.User();
+    user.name = data.consumeRemainingAsString();
+    mockMvc.perform(post("/json").content(om.writeValueAsString(user)).contentType(MediaType.APPLICATION_JSON));
   }
 
   @Test
@@ -79,4 +98,6 @@ public class SpringBootServerTests {
           throw new SecurityException("Endpoint /user crashed");
         }
   }
+
+
 }

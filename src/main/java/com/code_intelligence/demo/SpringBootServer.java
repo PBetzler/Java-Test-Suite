@@ -18,9 +18,8 @@ package com.code_intelligence.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Base64;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,11 +29,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @SpringBootApplication
 @RestController
-class SpringBootServer {
+public class SpringBootServer {
 
   private static AtomicInteger atomicInteger = new AtomicInteger(0);
   private static AtomicBoolean atomicBool = new AtomicBoolean(false);
   private static ReadWriteLock lock = new ReentrantReadWriteLock();
+
+
+  public static class User {
+    public String name;
+  }
 
 
   /**
@@ -54,6 +58,25 @@ class SpringBootServer {
       throw new SecurityException("We panic when trying to greet an attacker!");
     }
     return "Hello " + name + "!";
+  }
+
+  /**
+   * function that expects a JSON object that contains a name key and crashes if the value is attacker
+   * @param user
+   * @return
+   */
+  @PostMapping("/json")
+  public String insecureJson(@RequestBody(required = true) User user) {
+    // We trigger an exception in the special case where the name is "attacker". This shows
+    // how CI Fuzz can find this out and generates a test case triggering the exception
+    // guarded by this check.
+    // Black-box approaches lack insights into the code and thus cannot handle these cases.
+    if (user.name.equalsIgnoreCase("attacker")) {
+      // We throw an exception here to mimic the situation that something unexpected
+      // occurred while handling the request.
+      throw new SecurityException("We panic when trying to greet an attacker!");
+    }
+    return "Hello " + user.name + "!";
   }
 
   /**
