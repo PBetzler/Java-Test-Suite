@@ -23,8 +23,8 @@
 ## Command-line arguments to pass to libFuzzer.
 ## See https://llvm.org/docs/LibFuzzer.html#options
 engine-args:
-  - --instrumentation_includes=com.code_intelligence.demo.*
   - -use_value_profile=1
+  - --instrumentation_includes=com.demo.*:com.google.json.*
 # - -rss_limit_mb=4096
 
 ## Maximum time to run fuzz tests. The default is to run indefinitely.

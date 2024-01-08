@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.util.Objects;
 
 import static com.demo.RemoteCodeExecution.*;
 import static com.demo.RemoteCodeExecution.serialize;
