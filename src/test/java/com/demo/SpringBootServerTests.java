@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.code_intelligence.demo;
+package com.demo;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,11 +24,14 @@ import com.code_intelligence.jazzer.junit.FuzzTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest()
+@WebMvcTest
+@AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 public class SpringBootServerTests {
   @Autowired private MockMvc mockMvc;
 
@@ -92,12 +95,8 @@ public class SpringBootServerTests {
 
   @FuzzTest
   public void fuzzTestGetUser(FuzzedDataProvider data) throws Exception {
-        try {
-          mockMvc.perform(get("/user").param("id", data.consumeRemainingAsString()));
-        } catch (Exception ignored) {
-          throw new SecurityException("Endpoint /user crashed");
-        }
+    String in = data.consumeRemainingAsString();
+    mockMvc.perform(get("/user").queryParam("id", in));
   }
-
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.code_intelligence.demo;
+package com.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,15 +31,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @RestController
 public class SpringBootServer {
 
-  private static AtomicInteger atomicInteger = new AtomicInteger(0);
-  private static AtomicBoolean atomicBool = new AtomicBoolean(false);
-  private static ReadWriteLock lock = new ReentrantReadWriteLock();
-
+  private static final AtomicInteger atomicInteger = new AtomicInteger(0);
+  private static final AtomicBoolean atomicBool = new AtomicBoolean(false);
+  private static final ReadWriteLock lock = new ReentrantReadWriteLock();
 
   public static class User {
     public String name;
   }
-
 
   /**
    * Insecure /hello endpoint function that crashes when param name equals attacker
@@ -66,7 +64,7 @@ public class SpringBootServer {
    * @return
    */
   @PostMapping("/json")
-  public String insecureJson(@RequestBody(required = true) User user) {
+  public String insecureJson(@RequestBody User user) {
     // We trigger an exception in the special case where the name is "attacker". This shows
     // how CI Fuzz can find this out and generates a test case triggering the exception
     // guarded by this check.
@@ -88,6 +86,13 @@ public class SpringBootServer {
   @GetMapping("/first")
   public String first(@RequestParam(required = false, defaultValue = "World") String param) {
     if (param.equalsIgnoreCase("SomeThingRandom")) {
+
+      // TODO: Lock already secured access to bool and int value, so using only
+      //       the lock or only atomic values would be safe. Also the fuzzer is
+      //       running sequentially and parallel requests may interfere with
+      //       coverage tracking. In these cases the fuzzer can not know which
+      //       of its inputs changed the coverage state in which way and could
+      //       get "confused".
       lock.writeLock().lock();
 
       // Check if atomicInteger is 0 and if atomicBool is false
@@ -137,11 +142,10 @@ public class SpringBootServer {
     if (base64.encodeToString(id.getBytes()).startsWith("YWRtaW46")) {
       // We throw an exception here to mimic the situation that something unexpected
       // occurred while handling the request.
-      throw new SecurityException("SecurityException");
+      throw new SecurityException("Restricted username");
     }
     return "Hello user " + id + "!";
   }
-
 
   public static void main(String[] args) {
     SpringApplication.run(SpringBootServer.class, args);

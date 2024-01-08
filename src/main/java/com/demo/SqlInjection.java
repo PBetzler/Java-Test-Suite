@@ -1,4 +1,4 @@
-package com.code_intelligence.demo;
+package com.demo;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

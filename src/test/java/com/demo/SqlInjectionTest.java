@@ -1,9 +1,7 @@
-package com.code_intelligence.demo;
+package com.demo;
 
-import com.code_intelligence.demo.SqlInjection;
 import com.code_intelligence.jazzer.api.FuzzedDataProvider;
 import com.code_intelligence.jazzer.junit.FuzzTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
