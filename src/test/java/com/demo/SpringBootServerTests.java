@@ -67,14 +67,14 @@ public class SpringBootServerTests {
   }
 
   @Test
-  public void unitTestFirstAndSecond() throws Exception {
+  public void unitTestCallOrder() throws Exception {
     mockMvc.perform(get("/first").param("param", "Never gonna give you up"));
     mockMvc.perform(get("/second").param("param", "Never gonna let you down"));
     mockMvc.perform(get("/first").param("param", "Never gonna run around and desert you"));
   }
 
   @FuzzTest
-  public void fuzzTestFirstAndSecond(FuzzedDataProvider data) throws Exception {
+  public void fuzzTestCallOrder(FuzzedDataProvider data) throws Exception {
     for (int i = 0; i < data.consumeInt(1,100); i++) {
 
       switch (data.consumeInt(0,1)) {
@@ -89,12 +89,12 @@ public class SpringBootServerTests {
   }
 
   @Test
-  public void unitTestGetUser() throws Exception {
+  public void unitTestBase64() throws Exception {
     mockMvc.perform(get("/user").param("id", "something"));
   }
 
   @FuzzTest
-  public void fuzzTestGetUser(FuzzedDataProvider data) throws Exception {
+  public void fuzzTestBase64(FuzzedDataProvider data) throws Exception {
     String in = data.consumeRemainingAsString();
     mockMvc.perform(get("/user").queryParam("id", in));
   }

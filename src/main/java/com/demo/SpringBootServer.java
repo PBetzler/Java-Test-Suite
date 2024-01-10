@@ -59,7 +59,7 @@ public class SpringBootServer {
   }
 
   /**
-   * function that expects a JSON object that contains a name key and crashes if the value is attacker
+   * Insecure /json endpoint that expects a JSON object that contains a name key and crashes if the value is attacker
    * @param user
    * @return
    */
@@ -87,14 +87,7 @@ public class SpringBootServer {
   public String first(@RequestParam(required = false, defaultValue = "World") String param) {
     if (param.equalsIgnoreCase("SomeThingRandom")) {
 
-      // TODO: Lock already secured access to bool and int value, so using only
-      //       the lock or only atomic values would be safe. Also the fuzzer is
-      //       running sequentially and parallel requests may interfere with
-      //       coverage tracking. In these cases the fuzzer can not know which
-      //       of its inputs changed the coverage state in which way and could
-      //       get "confused".
       lock.writeLock().lock();
-
       // Check if atomicInteger is 0 and if atomicBool is false
       // if both are 0 and false, set both to 1 and true
       // else if only atomicInteger is 0 throw an exception that's caught by the fuzzer
@@ -105,6 +98,8 @@ public class SpringBootServer {
           lock.writeLock().unlock();
         } else {
           lock.writeLock().unlock();
+          // We throw an exception here to mimic the situation that something unexpected
+          // occurred while handling the request.
           throw new SecurityException("Access should not have been permitted!");
         }
       }
@@ -128,18 +123,18 @@ public class SpringBootServer {
   }
 
   /**
-   * Endpoint crashes if base64 encoded id of user starts with "YWRtaW46"
+   * Endpoint crashes if base64 encoded id of user id equals "YWRtaW46"
    * @param id
    * @return
    */
   @GetMapping("/user")
   public String getUser(@RequestParam String id) {
     Base64.Encoder base64 = Base64.getEncoder();
-    // We trigger an exception in the special case where the base64 encoded id starts with "YWRtaW46".
+    // We trigger an exception in the special case where the base64 encoded id equals "YWRtaW46".
     // This shows how CI Fuzz can find this out and generates a test case triggering the exception
     // guarded by this check.
     // Black-box approaches lack insights into the code and thus cannot handle these cases.
-    if (base64.encodeToString(id.getBytes()).startsWith("YWRtaW46")) {
+    if (base64.encodeToString(id.getBytes()).equals("YWRtaW46")) {
       // We throw an exception here to mimic the situation that something unexpected
       // occurred while handling the request.
       throw new SecurityException("Restricted username");
